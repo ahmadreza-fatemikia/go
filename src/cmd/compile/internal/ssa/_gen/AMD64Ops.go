@@ -1156,6 +1156,11 @@ func init() {
 		{name: "LoweredGetCallerPC", reg: gp01, rematerializeable: true},
 		// LoweredGetCallerSP returns the SP of the caller of the current function. arg0=mem
 		{name: "LoweredGetCallerSP", argLength: 1, reg: gp01, rematerializeable: true},
+		// LoweredMemEq calls runtime.memequal. arg0, arg1 = pointers to memory, arg2 = size, arg3 = mem.
+		// Returns true if the size bytes at arg0 and arg1 are equal.
+		// It is not faultOnNilArg0/1: memequal returns without loading anything
+		// when the two pointers are equal or the size is 0.
+		{name: "LoweredMemEq", argLength: 4, reg: regInfo{inputs: []regMask{buildReg("AX"), buildReg("BX"), buildReg("CX")}, outputs: []regMask{buildReg("AX")}, clobbers: callerSave}, typ: "Bool", clobberFlags: true, call: true},
 		//arg0=ptr,arg1=mem, returns void.  Faults if ptr is nil.
 		{name: "LoweredNilCheck", argLength: 2, reg: regInfo{inputs: []regMask{gpsp}}, clobberFlags: true, nilCheck: true, faultOnNilArg0: true},
 		// LoweredWB invokes runtime.gcWriteBarrier{auxint}. arg0=mem, auxint=# of buffer entries needed.

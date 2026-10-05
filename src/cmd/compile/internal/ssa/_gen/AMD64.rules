@@ -467,6 +467,7 @@
 (GetClosurePtr ...) => (LoweredGetClosurePtr ...)
 (GetCallerPC ...) => (LoweredGetCallerPC ...)
 (GetCallerSP ...) => (LoweredGetCallerSP ...)
+(MemEq ...) => (LoweredMemEq ...)
 
 (HasCPUFeature {s}) => (SETNE (CMPLconst [0] (LoweredHasCPUFeature {s})))
 (Addr {sym} base) => (LEAQ {sym} base)

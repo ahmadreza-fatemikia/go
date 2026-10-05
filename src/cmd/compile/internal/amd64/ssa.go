@@ -1455,6 +1455,17 @@ func ssaGenValue(s *ssagen.State, v *ssa.Value) {
 	case ssaop.OpAMD64CALLclosure, ssaop.OpAMD64CALLinter:
 		s.Call(v)
 
+	case ssaop.OpAMD64LoweredMemEq:
+		if s.ABI == obj.ABI0 {
+			// runtime.memequal is ABIInternal.
+			zeroX15(s)
+			getgFromTLS(s, x86.REG_R14)
+		}
+		p := s.Prog(obj.ACALL)
+		p.To.Type = obj.TYPE_MEM
+		p.To.Name = obj.NAME_EXTERN
+		p.To.Sym = ir.Syms.Memequal
+
 	case ssaop.OpAMD64LoweredGetCallerPC:
 		p := s.Prog(x86.AMOVQ)
 		p.From.Type = obj.TYPE_MEM

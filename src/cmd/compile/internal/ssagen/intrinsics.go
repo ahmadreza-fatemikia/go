@@ -203,7 +203,7 @@ func initIntrinsics(cfg *intrinsicBuildConfig) {
 		func(s *state, n *ir.CallExpr, args []*ssa.Value) *ssa.Value {
 			return s.newValue4(ssaop.OpMemEq, s.f.Config.Types.Bool, args[0], args[1], args[2], s.mem())
 		},
-		sys.ARM64)
+		sys.AMD64, sys.ARM64)
 
 	if cfg.goppc64 >= 10 {
 		// Use only on Power10 as the new byte reverse instructions that Power10 provide

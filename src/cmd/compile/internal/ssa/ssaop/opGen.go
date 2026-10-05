@@ -764,6 +764,7 @@ const (
 	OpAMD64LoweredGetClosurePtr
 	OpAMD64LoweredGetCallerPC
 	OpAMD64LoweredGetCallerSP
+	OpAMD64LoweredMemEq
 	OpAMD64LoweredNilCheck
 	OpAMD64LoweredWB
 	OpAMD64LoweredHasCPUFeature
@@ -20950,6 +20951,23 @@ var OpcodeTable = [...]OpInfo{
 		Reg: RegInfo{
 			Outputs: []OutputInfo{
 				{0, RegMask{V1: 49135, V2: 0}}, // AX CX DX BX BP SI DI R8 R9 R10 R11 R12 R13 R15
+			},
+		},
+	},
+	{
+		Name:         "LoweredMemEq",
+		ArgLen:       4,
+		ClobberFlags: true,
+		Call:         true,
+		Reg: RegInfo{
+			Inputs: []InputInfo{
+				{0, RegMask{V1: 1, V2: 0}}, // AX
+				{1, RegMask{V1: 8, V2: 0}}, // BX
+				{2, RegMask{V1: 2, V2: 0}}, // CX
+			},
+			Clobbers: RegMask{V1: 71776116913733615, V2: 0}, // AX CX DX BX BP SI DI R8 R9 R10 R11 R12 R13 g R15 X0 X1 X2 X3 X4 X5 X6 X7 X8 X9 X10 X11 X12 X13 X14 X16 X17 X18 X19 X20 X21 X22 X23 X24 X25 X26 X27 X28 X29 X30 X31 K1 K2 K3 K4 K5 K6 K7
+			Outputs: []OutputInfo{
+				{0, RegMask{V1: 1, V2: 0}}, // AX
 			},
 		},
 	},

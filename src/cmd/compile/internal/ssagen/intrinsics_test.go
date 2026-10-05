@@ -152,6 +152,7 @@ var wantIntrinsics = map[testIntrinsicKey]struct{}{
 	{"amd64", "math/bits", "TrailingZeros64"}:                          struct{}{},
 	{"amd64", "math/bits", "TrailingZeros8"}:                           struct{}{},
 	{"amd64", "runtime", "KeepAlive"}:                                  struct{}{},
+	{"amd64", "runtime", "memequal"}:                                   struct{}{},
 	{"amd64", "runtime", "slicebytetostringtmp"}:                       struct{}{},
 	{"amd64", "sync/atomic", "AddInt32"}:                               struct{}{},
 	{"amd64", "sync/atomic", "AddInt64"}:                               struct{}{},

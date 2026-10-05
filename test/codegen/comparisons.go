@@ -108,16 +108,13 @@ func CompareStruct2(s1, s2 T2) bool {
 	return s1 == s2
 }
 
-// Assert that a memequal call is still generated when
-// inlining would increase binary size too much.
-
 type T3 struct {
 	a [24]byte
 }
 
 func CompareStruct3(s1, s2 T3) bool {
-	// amd64:-`CMPQ command-line-arguments[.+_a-z0-9]+\(SP\), [A-Z]`
-	// amd64:`CALL`
+	// amd64:`CMPQ command-line-arguments[.+_a-z0-9]+\(SP\), [A-Z]`
+	// amd64:-`CALL`
 	return s1 == s2
 }
 
@@ -126,6 +123,19 @@ type T4 struct {
 }
 
 func CompareStruct4(s1, s2 T4) bool {
+	// amd64:`CMPQ command-line-arguments[.+_a-z0-9]+\(SP\), [A-Z]`
+	// amd64:-`CALL`
+	return s1 == s2
+}
+
+// Assert that a memequal call is still generated when
+// inlining would increase binary size too much.
+
+type T5 struct {
+	a [33]byte
+}
+
+func CompareStruct5(s1, s2 T5) bool {
 	// amd64:-`CMPQ command-line-arguments[.+_a-z0-9]+\(SP\), [A-Z]`
 	// amd64:`CALL`
 	return s1 == s2
@@ -687,10 +697,13 @@ func equalVarString8(a string) bool {
 
 func equalVarStringNoSpill(a, b string) bool {
 	s := string("123456789012345678901234567890123")
+	// amd64:".*memequal"
 	// arm64:".*memequal"
 	memeq1 := a[:33] == s
+	// amd64:-".*"
 	// arm64:-".*"
 	memeq2 := s == a[:33]
+	// amd64:-"MOVB AL,.*SP" ".*memequal"
 	// arm64:-"MOVB R0,.*SP" ".*memequal"
 	memeq3 := s == b[:33]
 	return memeq1 && memeq2 && memeq3
@@ -698,8 +711,26 @@ func equalVarStringNoSpill(a, b string) bool {
 
 func equalVarString17(a string) bool {
 	b := string("12345678901234567")
+	// amd64:-".*memequal" "CMPB 16[(]AX[)], [$]55" "MOVQ [$]3906085646303834169," "MOVQ [$]4050765991979987505,"
 	// arm64:-".*memequal" "CMPW [$]55," "MOVD [$]3906085646303834169," "MOVD [$]4050765991979987505,"
 	return a[:17] == b
+}
+
+// Issue 24765: comparing a small array converted to a string
+// must not call memequal.
+
+type BoxType [4]byte
+
+func (t BoxType) EqualString(s string) bool {
+	// amd64:-".*memequal" "CMPL"
+	// arm64:-".*memequal"
+	return string(t[:]) == s
+}
+
+func equalArrayString8(t *[8]byte, s string) bool {
+	// amd64:-".*memequal" "CMPQ [(]AX[)], [A-Z]+"
+	// arm64:-".*memequal"
+	return string(t[:]) == s
 }
 
 func cmpToCmn(a, b, c, d int) int {

@@ -12,6 +12,7 @@ func loadsAroundMemEqual(p *int, s1, s2 string) (int, bool) {
 	x := *p
 	eq := s1 == s2
 	y := *p
+	// amd64:"XORL AX, AX"
 	// arm64:"MOVD ZR, R0"
 	return x - y, eq
 }

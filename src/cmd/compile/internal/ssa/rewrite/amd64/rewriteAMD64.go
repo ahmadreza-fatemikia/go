@@ -5208,6 +5208,9 @@ func RewriteValue(v *ssa.Value) bool {
 	case ssaop.OpMaxUint8x64:
 		v.Op = ssaop.OpAMD64VPMAXUB512
 		return true
+	case ssaop.OpMemEq:
+		v.Op = ssaop.OpAMD64LoweredMemEq
+		return true
 	case ssaop.OpMin32F:
 		return rewriteValue_OpMin32F(v)
 	case ssaop.OpMin32FSel:

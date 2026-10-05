@@ -80558,12 +80558,10 @@ var OpcodeTable = [...]OpInfo{
 		},
 	},
 	{
-		Name:           "LoweredMemEq",
-		ArgLen:         4,
-		ClobberFlags:   true,
-		Call:           true,
-		FaultOnNilArg0: true,
-		FaultOnNilArg1: true,
+		Name:         "LoweredMemEq",
+		ArgLen:       4,
+		ClobberFlags: true,
+		Call:         true,
 		Reg: RegInfo{
 			Inputs: []InputInfo{
 				{0, RegMask{V1: 1, V2: 0}}, // R0
